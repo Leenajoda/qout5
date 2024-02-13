@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>موقع الاقتباسات والكتب</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #0D1B2A; /* اللون الكحلي */
+        color: #FFCB3F; /* اللون الذهبي */
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background-color: #0D1B2A;
+        color: #FFCB3F;
+        padding: 20px;
+        text-align: center;
+    }
+    .container {
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    form {
+        background-color: #11283F; /* لون خلفية النموذج */
+        padding: 20px;
+        border-radius: 10px;
+    }
+    input[type=text], textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #FFCB3F;
+        border-radius: 5px;
+        background-color: #0D1B2A;
+        color: #FFCB3F;
+    }
+    input[type=submit], .delete-btn {
+        background-color: #FFCB3F;
+        color: #0D1B2A;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .quote-item {
+        margin-bottom: 20px;
+    }
+    .delete-btn {
+        margin-left: 10px;
+    }
+</style>
+</head>
+<body>
+<header>
+    <h1>موقع الاقتباسات والكتب</h1>
+</header>
+
+<div class="container">
+    <form id="quoteForm">
+        <label for="quote">الاقتباس:</label>
+        <textarea id="quote" name="quote" placeholder="اكتب الاقتباس هنا..." required></textarea>
+        <label for="book">الكتاب:</label>
+        <input type="text" id="book" name="book" placeholder="اكتب اسم الكتاب هنا..." required>
+        <input type="submit" value="حفظ">
+    </form>
+
+    <div id="quotesList">
+        <!-- هنا سيتم عرض الاقتباسات والكتب المحفوظة -->
+    </div>
+</div>
+
+<script>
+    // استرجاع الاقتباسات والكتب من Local Storage عند تحميل الصفحة
+    window.onload = function() {
+        const savedQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+        const quotesList = document.getElementById("quotesList");
+        savedQuotes.forEach(quote => {
+            const quoteItem = document.createElement("div");
+            quoteItem.classList.add("quote-item");
+            quoteItem.innerHTML = "<p><strong>الاقتباس:</strong> " + quote.quote + "</p><p><strong>الكتاب:</strong> " + quote.book + "</p>";
+            const deleteBtn = document.createElement("button");
+            deleteBtn.classList.add("delete-btn");
+            deleteBtn.textContent = "حذف";
+            deleteBtn.addEventListener("click", function() {
+                quotesList.removeChild(quoteItem);
+                // حذف الاقتباس أو الكتاب من Local Storage
+                const index = savedQuotes.indexOf(quote);
+                savedQuotes.splice(index, 1);
+                localStorage.setItem("quotes", JSON.stringify(savedQuotes));
+            });
+            quoteItem.appendChild(deleteBtn);
+            quotesList.appendChild(quoteItem);
+        });
+    };
+
+    document.getElementById("quoteForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const quote = document.getElementById("quote").value;
+        const book = document.getElementById("book").value;
+
+        const quotesList = document.getElementById("quotesList");
+        const quoteItem = document.createElement("div");
+        quoteItem.classList.add("quote-item");
+        quoteItem.innerHTML = "<p><strong>الاقتباس:</strong> " + quote + "</p><p><strong>الكتاب:</strong> " + book + "</p>";
+        const deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.textContent = "حذف";
+        deleteBtn.addEventListener("click", function() {
+            quotesList.removeChild(quoteItem);
+            // حذف الاقتباس أو الكتاب من Local Storage
+            const index = savedQuotes.indexOf(quote);
+            savedQuotes.splice(index, 1);
+            localStorage.setItem("quotes", JSON.stringify(savedQuotes));
+        });
+        quoteItem.appendChild(deleteBtn);
+        quotesList.appendChild(quoteItem);
+
+        // حفظ الاقتباس والكتاب في Local Storage
+        const savedQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+        savedQuotes.push({ quote: quote, book: book });
+        localStorage.setItem("quotes", JSON.stringify(savedQuotes));
+
+        // تفريغ حقول النموذج بعد الحفظ
+        document.getElementById("quote").value = "";
+        document.getElementById("book").value = "";
+    });
+</script>
+
+<!-- إضافة التصميم بواسطة لينا جودة -->
+<footer style="text-align: center; margin-top: 20px; color: #FFCB3F;">صمم بواسطة لينا
